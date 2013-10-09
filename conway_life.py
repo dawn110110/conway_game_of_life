@@ -169,7 +169,7 @@ class GridWindow(object):
         self.lb1 = Label(text="update interval(ms):")
         self.lb1.pack()
         self.speed_scale = Scale(self.root,
-                                 from=10,
+                                 from_=10,
                                  to=1000,
                                  orient=HORIZONTAL,
                                  command=self.speed_change)
