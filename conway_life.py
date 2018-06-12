@@ -6,12 +6,17 @@ Conway 's game of life , python version using Tkinter
 details of this game:
 http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
-author : dawn110110@gmail.com
-start date : 2012-Jan-18
-
+created by dawn110110@gmail.com on 2012-Jan-18
+(2018-June-12 : add Python3.6 support)
 '''
-from Tkinter import *
-
+from __future__ import print_function
+import sys
+if sys.version_info >= (3, 0):
+    from tkinter import *
+    _xrange = range
+else:
+    from Tkinter import *
+    _xrange = xrange
 
 class TkPeriodicCallMixin(object):
     ''' periodic call '''
@@ -25,7 +30,7 @@ class TkPeriodicCallMixin(object):
 
     def polling_callback(self, *args, **kargs):
         ''' to be rewrite '''
-        print self, id(self)
+        print(self, id(self))
 
     def start_polling(self):
         self.running = True
@@ -71,7 +76,7 @@ class Grid(Canvas, TkPeriodicCallMixin):
         self.delete(ALL)
         self.create_rectangle(0, 0, 600, 400, fill='grey')
         self.create_rectangle(10, 10, 590, 390, fill='white')
-        for x in xrange(60):
+        for x in _xrange(60):
             self.create_line(
                 10+10*x,
                 10,
@@ -79,7 +84,7 @@ class Grid(Canvas, TkPeriodicCallMixin):
                 390,
                 fill="grey",
                 dash=(4, 4))
-        for y in xrange(40):
+        for y in _xrange(40):
             self.create_line(
                 10,
                 10 + 10*y,
@@ -87,8 +92,8 @@ class Grid(Canvas, TkPeriodicCallMixin):
                 10 + 10*y,
                 fill="grey",
                 dash=(4, 4))
-        for i in xrange(60):
-            for j in xrange(40):
+        for i in _xrange(60):
+            for j in _xrange(40):
                 if self.conway_map.map[i][j]:
                     color = self.COLOR_MAP[self.conway_map.around_count[i][j]]
                     self.create_rectangle(
@@ -104,7 +109,7 @@ class Grid(Canvas, TkPeriodicCallMixin):
         click by the god(user), x y are clicks by the user,
         '''
         if x < 590 and x > 10 and y > 10 and y < 390:
-            i, j = (x-15)/10, (y-15)/10
+            i, j = int((x-15)/10), int((y-15)/10)
             self.create_rectangle(
                 10*i + 10,
                 10*j + 10,
@@ -137,7 +142,7 @@ class GridWindow(object):
         self.root.title("conway's game of life, python version")
 
         descrition = u"conway 's game of life\n\
-                powered by Dawn http://orzdawn.com\n\n\
+                powered by Dawn Zhang\n\n\
                 left click on the grid to make new lives\n\
                 right click to kill lives"
         self.lb2 = Label(text=descrition)
@@ -178,7 +183,7 @@ class GridWindow(object):
 
     def speed_change(self, val):
         #val = self.speed_scale.get()
-        print 'speed_scale=%r' % val
+        print('speed_scale=%r' % val)
         self.grid.interval = int(val)
 
     def go_pause(self):
@@ -202,11 +207,11 @@ class GridWindow(object):
         self.root.mainloop()
 
     def left_click(self, event):
-        print "left,mouse pos: %r,%r" % (event.x, event.y),
+        print("left,mouse pos: %r,%r" % (event.x, event.y))
         self.grid.god_click(event.x, event.y)
 
     def right_click(self, event):
-        print "right,mouse pos: %r,%r" % (event.x, event.y),
+        print("right,mouse pos: %r,%r" % (event.x, event.y))
         self.grid.right_click(event.x, event.y)
 
 
@@ -218,13 +223,13 @@ class Conway_Map(object):
 
         # counting arounds
         self.around_count = [[0 for i in range(y)] for j in range(x)]
-        print len(self.map), ' ', len(self.map[0])
+        print(len(self.map), ' ', len(self.map[0]))
 
     def update(self):
         ''' update the self.map '''
         self.count_map()
-        for i in xrange(60):
-            for j in xrange(40):
+        for i in _xrange(60):
+            for j in _xrange(40):
                 if self.around_count[i][j] == 2:
                     pass
                 elif self.around_count[i][j] == 3:
@@ -238,8 +243,8 @@ class Conway_Map(object):
         count the map. store result in self.around_count
         around every block, count the alive blocks around it.
         '''
-        for i in xrange(60):
-            for j in xrange(40):
+        for i in _xrange(60):
+            for j in _xrange(40):
                 arounds = [
                     (i, (j+1) % 40),
                     (i, (j-1) % 40),
@@ -259,12 +264,12 @@ class Conway_Map(object):
         '''
         callback
         '''
-        print "grid_pos = (%d,%d)" % (x, y)
-        self.map[x][y] = 1  # set life
+        print("grid_pos = (%d,%d)" % (x, y))
+        self.map[int(x)][int(y)] = 1  # set life
 
     def clear_all(self):
-        for i in xrange(60):
-            for j in xrange(40):
+        for i in _xrange(60):
+            for j in _xrange(40):
                 self.map[i][j] = 0
 
 
